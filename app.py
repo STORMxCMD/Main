@@ -11,13 +11,21 @@ class FrameWorkApp:
     
     def handle_request(self, request):
         res=Response()
+        is_there=False
         
         for path, handler in self.routes.items():
             if path == request.path:
                 handler(request, res)
+                is_there=True
+
+        if not is_there:
+            self.default_response(res)
 
         return res
-
+    def default_response(self, response):
+        response.status_code=404
+        response.text="URL hatolik bor, topilmadi"
+        
     def route(self, path):
         def wrapper(handler):
             self.routes[path]=handler
